@@ -1,7 +1,8 @@
 import { Header } from "@react-navigation/elements";
 import { Stack } from "expo-router";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native"; // Import ActivityIndicator
 import { LinearGradient } from "expo-linear-gradient";
+import { AuthProvider, useAuth } from './context/AuthContext'; // Import AuthProvider and useAuth
 
 const CustomHeader = () => {
   return (
@@ -20,7 +21,17 @@ const CustomHeader = () => {
   );
 };
 
-const RootLayout = () => {
+const RootLayoutNav = () => {
+  const { isLoading, token } = useAuth(); // Get isLoading and token from context
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#3498db" />
+      </View>
+    );
+  }
+
   return (
     <Stack
       screenOptions={{
@@ -29,6 +40,14 @@ const RootLayout = () => {
         contentStyle: { backgroundColor: "#f8f8f8" },
       }}
     />
+  );
+};
+
+const RootLayout = () => {
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
   );
 };
 
